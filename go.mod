@@ -6,7 +6,6 @@ require (
 	github.com/go-chi/chi/v5 v5.1.0
 	github.com/google/generative-ai-go v0.16.0
 	google.golang.org/api v0.186.0
-	nhooyr.io/websocket v1.8.11
 )
 
 require (
@@ -26,7 +25,7 @@ require (
 	github.com/google/wire v0.6.0
 	github.com/googleapis/enterprise-certificate-proxy v0.3.2 // indirect
 	github.com/googleapis/gax-go/v2 v2.12.5 // indirect
-	github.com/gorilla/websocket v1.5.3 // indirect
+	github.com/gorilla/websocket v1.5.3
 	go.opencensus.io v0.24.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.51.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.51.0 // indirect

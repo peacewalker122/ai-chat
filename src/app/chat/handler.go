@@ -3,7 +3,6 @@ package chat
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -36,12 +35,11 @@ func (h *Handler) Chat(w http.ResponseWriter, r *http.Request) {
 	defer conn.Close()
 
 	// Set up a ping-pong mechanism with timeout
-	pingPeriod := 10 * time.Second
+	pingPeriod := 5 * time.Second
 	pongWait := 10 * time.Second
 
 	conn.SetReadDeadline(time.Now().Add(pongWait))
 	conn.SetPongHandler(func(string) error {
-		log.Println("pong received")
 		conn.SetReadDeadline(time.Now().Add(pongWait))
 		return nil
 	})
@@ -54,6 +52,7 @@ func (h *Handler) Chat(w http.ResponseWriter, r *http.Request) {
 			case <-ticker.C:
 				if err := conn.WriteMessage(websocket.PingMessage, nil); err != nil {
 					log.Println("write ping:", err)
+					conn.SetReadDeadline(time.Now().Add(pongWait))
 					return
 				}
 			}
@@ -79,6 +78,7 @@ func (h *Handler) Chat(w http.ResponseWriter, r *http.Request) {
 				break
 			}
 
+			conn.SetWriteDeadline(time.Now().Add(pongWait))
 			for _, candidate := range msg.Candidates {
 				if candidate.Content != nil {
 					content := candidate.Content
@@ -89,7 +89,6 @@ func (h *Handler) Chat(w http.ResponseWriter, r *http.Request) {
 						return
 					}
 
-					fmt.Println(string(data))
 					if err := conn.WriteMessage(websocket.TextMessage, data); err != nil {
 						log.Println("write:", err)
 						return
